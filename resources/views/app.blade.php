@@ -173,8 +173,10 @@
             <li><a href="{{ url('role') }}">Role</a></li>
             <li><a href="{{ route('product.index') }}">Produk</a></li>
             <li><a href="{{ route('category.index') }}">Category</a></li>
-            <li><a href="#">Pesanan</a></li>
-            <li><a href="#">Pengaturan</a></li>
+            <li><a href="{{ route('menu.index') }}">Menu</a></li>
+            <li><a href="{{ url('peserta') }}">Peserta</a></li>
+            <li><a href="{{ url('order') }}">Transcation Order</a></li>
+            <li><a href="#">Setting</a></li>
         </ul>
     </aside>
     <!-- Main Area -->
