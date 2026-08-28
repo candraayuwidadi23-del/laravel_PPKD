@@ -77,8 +77,8 @@ class OrderController extends Controller
                 $order = Order::create([
                     'order_code' => $orderCode,
                     'order_amount' => $total,
-                    'order_change' => 0,
-                    // 'status' => $paymentMethod === 'cash' ? 'success' : 'pending'
+                    'order_change' => $request->order_change,
+                    'status' => $paymentMethod === 'cash' ? 1 : 0
                 ]);
 
                 foreach ($itemsData as $data) {

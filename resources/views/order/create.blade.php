@@ -520,6 +520,10 @@
             document.getElementById('total').innerText = `Rp. ${formatRupiah(total)}`;
             document.getElementById('total-paid').innerText = `Rp. ${formatRupiah(total)}`
             document.getElementById('cartCount').innerText = itemCount;
+
+            return {
+                total
+            };
         }
 
         function formatRupiah(number) {
@@ -557,6 +561,20 @@
                 alert("PILIH DAHULU METODE PEMBAYARAN!");
                 return;
             }
+            const {
+                total
+            } = calculateCart();
+            const cashPayInput = document.getElementById('cash_paid');
+            let change = 0;
+
+
+
+                if (paymentMethod === 'cash'){
+                    const cashPaidValue = parseFloat(cashPayInput?.value) || 0;
+                    change = cashPaidValue - total;
+                }
+
+
 
             console.log(customerName);
             console.log(paymentMethod);
@@ -578,7 +596,8 @@
                             }
                         }),
                         payment_method: paymentMethod,
-                        customer_name: customerName
+                        customer_name: customerName,
+                        order_change: change
                     })
                 })
                 const result = await response.json();
