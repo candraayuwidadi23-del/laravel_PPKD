@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Middleware\Administrator;
+use App\Http\Middleware\Cashier;
+use App\Http\Middleware\Manager;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -12,7 +15,21 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        $middleware->alias([
+            'admin' => Administrator::class,
+        ]);
+    })
+
+    ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->alias([
+            'kasir' => Cashier::class,
+        ]);
+    })
+
+    ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->alias([
+            'pimpinan' => Manager::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

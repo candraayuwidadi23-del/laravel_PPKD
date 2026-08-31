@@ -14,13 +14,21 @@ class LoginController extends Controller
     public function actionLogin(Request $request)
     {
         $credentials = $request->validate([
-            'email'=> 'required|email', 
+            'email'=> 'required|email',
             'password'=> 'required|min:6',
         ]);
 
         if(Auth::attempt($credentials)){
             $request->session()->regenerate();
-            return redirect()->intended('/dashboard');
+            $user = Auth::user();
+            if ($user->role_id == 1){
+                return redirect()->intended('/admin/dashboard');
+            }else if($user->role_id == 2){
+                return redirect()->intended('/cashier/dashboard');
+            }else {
+                return redirect()->intended('/dashboard');
+            }
+
         }
         return back()
         ->withErrors(['email'=> 'Invalid Email or password'])->onlyInput('email');

@@ -18,7 +18,8 @@ class OrderController extends Controller
      */
     public function index()
     {
-        return view('order.index');
+        $orders = Order::all();
+        return view('order.index', compact('orders'));
     }
 
     /**
@@ -29,6 +30,55 @@ class OrderController extends Controller
         $categories = Category::get();
         $products = Product::with('category')->orderBy('id')->get();
         return view('order.create', compact('categories', 'products'));
+    }
+
+    public function creater()
+    {
+        $categories = Category::get();
+        $products = Product::OrderBy('id')->get();
+        return view('order.creater', compact('categories', 'products'));
+    }
+    public function notification(Request $request)
+    {
+        dd($request->all());
+        $order = Order::where(
+            'order_id',
+            $request->order_id
+        )->first();
+        if (!$order) {
+            return response()->json([
+                'message' => 'Order not found'
+            ], 404);
+        }
+        if (
+            $request->transaction_status === 'settlement' ||
+            $request->transaction_status === 'capture'
+        ) {
+            if ($request->fraud_status === 'challenge') {
+                $order->update([
+                    'status' => 1
+                ]);
+            } else {
+                $order->update([
+                    'status' => 2
+                ]);
+            }
+        } elseif ($request->transaction_status === 'pending') {
+            $order->update([
+                'status' => 1
+            ]);
+        } elseif (
+            $request->transaction_status === 'deny' ||
+            $request->transaction_status === 'expire' ||
+            $request->transaction_status === 'cancel'
+        ) {
+            $order->update([
+                'status' => 0
+            ]);
+        }
+        return response()->json([
+            'message' => 'Notification processed'
+        ]);
     }
 
     /**
@@ -103,7 +153,7 @@ class OrderController extends Controller
 
                     $params = [
                         "transaction_details" => [
-                            "order_id" => $order->order_code,
+                            "order_id" => $order->id,
                             "gross_amount" => (int) round($total)
                         ],
                         "customer_details" => [
@@ -137,6 +187,12 @@ class OrderController extends Controller
                 'message' => $th->getMessage()
             ], $status);
         }
+    }
+
+    public function printRecipt(string $id)
+    {
+        $order = Order::with('orderDetails.product')->find($id);
+        return view('order.print', compact('order'));
     }
     /**
      * Display the specified resource.

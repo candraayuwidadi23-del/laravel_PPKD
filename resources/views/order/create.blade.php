@@ -611,6 +611,7 @@
                         onSuccess: function(result) {
                             /* You may add your own implementation here */
                             alert("payment success!");
+                            window.open(`${result.order_id}/print`, '_blank');
                             cart = [];
                             displayCart();
                             location.reload();
@@ -633,6 +634,7 @@
                     });
                 } else {
                     alert('Transaksi Cash Berhasil!');
+                    window.open(`${result.order_id}/print`, '_blank');
                     cart = [];
                     displayCart();
                     location.reload();

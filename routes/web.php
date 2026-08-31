@@ -77,7 +77,7 @@ Route::delete('delete/{id}', [PesertaController::class, 'delete'])->name('delete
 // Middleware:
 Route::middleware('auth')->group(function () {
     // Dashboard
-    Route::resource('dashboard', DashboardController::class);
+
     // Menu
     Route::resource('menu', MenuController::class);
 
@@ -88,10 +88,25 @@ Route::middleware('auth')->group(function () {
     Route::resource('category', CategoryController::class);
     // Product
     Route::resource('product', ProductController::class);
-    // Order
-    Route::resource('order', OrderController::class);
+
+    Route::get('order/creater', [OrderController::class, 'creater'])->name('order.creater');
+    Route::post('/midtrans/notification', [OrderController::class, 'notification'])->name('midtrans.notification');
+
+
     // Order Detail
     // Route::resource('order', OrderController::class);
     Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
+    Route::get('order/{id}/print', [OrderController::class, 'printRecipt'])->name('order.print');
+});
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('admin/dashboard', [DashboardController::class, 'indexAdmin']);
+});
+Route::middleware(['auth', 'kasir'])->group(function () {
+    Route::get('cashier/dashboard', [DashboardController::class, 'indexCashier']);
+    // Order
+    Route::resource('order', OrderController::class);
+});
+Route::middleware(['auth', 'pimpinan'])->group(function () {
+    Route::resource('dashboard', DashboardController::class);
 });

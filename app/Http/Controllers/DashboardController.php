@@ -13,6 +13,14 @@ class DashboardController extends Controller
     {
         return view('dashboard.index');
     }
+    public function indexAdmin()
+    {
+        return view('dashboard.index');
+    }
+    public function indexCashier()
+    {
+        return view('dashboard.index');
+    }
 
     /**
      * Show the form for creating a new resource.
